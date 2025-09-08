@@ -31,17 +31,20 @@ export function Header() {
             <HeartHandshake className="h-6 w-6 text-primary" />
             <span className="font-bold font-headline">Hope Harbour</span>
           </Link>
-          <nav className="hidden items-center space-x-6 text-sm font-medium md:flex">
+          <nav className="hidden items-center space-x-1 text-sm font-medium md:flex">
             {navLinks.map(({ href, label }) => (
               <Link
                 key={label}
                 href={href}
                 className={cn(
-                  "transition-colors hover:text-foreground/80",
-                  pathname === href ? "text-foreground" : "text-foreground/60"
+                  "relative px-3 py-2 transition-colors hover:text-primary",
+                  pathname === href ? "text-primary" : "text-foreground/70"
                 )}
               >
                 {label}
+                {pathname === href && (
+                   <span className="absolute inset-x-2 bottom-0 h-0.5 bg-primary"></span>
+                )}
               </Link>
             ))}
           </nav>

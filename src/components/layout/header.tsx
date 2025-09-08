@@ -15,6 +15,7 @@ const navLinks = [
   { href: "/updates", label: "Updates" },
   { href: "/resources", label: "Resources" },
   { href: "/lost-and-found", label: "Lost & Found" },
+  { href: "/faq", label: "FAQ" },
   { href: "/volunteer", label: "Volunteer" },
   { href: "/contact", label: "Contact" },
 ];
@@ -27,8 +28,8 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-20 items-center">
         <div className="mr-4 flex">
-          <Link href="/" className="mr-6 flex items-center space-x-2">
-            <HeartHandshake className="h-7 w-7 text-primary" />
+          <Link href="/" className="mr-6 flex items-center space-x-2 group">
+            <HeartHandshake className="h-7 w-7 text-primary group-hover:animate-pulse" />
             <span className="font-bold text-xl font-headline">Hope Harbour</span>
           </Link>
           <nav className="hidden items-center space-x-1 text-sm font-medium md:flex">
@@ -37,22 +38,22 @@ export function Header() {
                 key={label}
                 href={href}
                 className={cn(
-                  "relative px-3 py-2 transition-colors hover:text-primary",
+                  "relative px-3 py-2 transition-colors hover:text-primary group",
                   pathname === href ? "text-primary font-semibold" : "text-foreground/70"
                 )}
               >
                 {label}
                 {pathname === href && (
-                   <span className="absolute inset-x-2 -bottom-px h-0.5 bg-primary rounded-full transition-all duration-300"></span>
+                   <span className="absolute inset-x-2 -bottom-2 h-0.5 bg-primary rounded-full transition-all duration-300"></span>
                 )}
-                 <span className="absolute inset-x-2 -bottom-px h-0.5 bg-primary rounded-full transition-all duration-300 scale-x-0 group-hover:scale-x-100"></span>
+                 <span className="absolute inset-x-2 -bottom-2 h-0.5 bg-primary rounded-full transition-all duration-300 scale-x-0 group-hover:scale-x-100"></span>
               </Link>
             ))}
           </nav>
         </div>
 
         <div className="flex flex-1 items-center justify-end space-x-2">
-          <Button asChild className="hidden md:inline-flex shadow-sm hover:shadow-md transition-shadow">
+          <Button asChild className="hidden md:inline-flex shadow-sm hover:shadow-lg transition-shadow bg-accent hover:bg-accent/90">
             <Link href="/donate">Donate Now</Link>
           </Button>
           <Sheet open={isMobileMenuOpen} onOpenChange={setMobileMenuOpen}>

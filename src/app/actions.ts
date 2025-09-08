@@ -66,7 +66,6 @@ export async function textToSpeechAction(
   }
 }
 
-// Updated server action for form submissions
 export async function submitDonation(data: { amount: number; donationType: string; name: string; email: string; }) {
     try {
         await addDoc(collection(db, "donations"), {
@@ -81,15 +80,29 @@ export async function submitDonation(data: { amount: number; donationType: strin
 }
 
 export async function submitVolunteerForm(data: any) {
-    console.log("Volunteer registration submitted:", data);
-    // In a real app, you would save this to a database
-    return { success: true, message: "Thank you for volunteering! We will be in touch soon." };
+    try {
+        await addDoc(collection(db, "volunteers"), {
+            ...data,
+            createdAt: serverTimestamp(),
+        });
+        return { success: true, message: "Thank you for volunteering! We will be in touch soon." };
+    } catch (error) {
+        console.error("Error submitting volunteer form:", error);
+        return { success: false, message: "Could not process your registration. Please try again." };
+    }
 }
 
 export async function submitResource(data: any) {
-    console.log("Resource submitted:", data);
-    // In a real app, you would save this to a database
-    return { success: true, message: "Your resource listing has been posted. Thank you for your contribution." };
+    try {
+        await addDoc(collection(db, "resources"), {
+            ...data,
+            createdAt: serverTimestamp(),
+        });
+        return { success: true, message: "Your resource listing has been posted. Thank you for your contribution." };
+    } catch (error) {
+        console.error("Error submitting resource:", error);
+        return { success: false, message: "Could not post your listing. Please try again." };
+    }
 }
 
 export async function submitContactForm(data: any) {

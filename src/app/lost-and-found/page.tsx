@@ -164,7 +164,6 @@ function ReportForm() {
     // The photo field is a FileList, which is not serializable for a server action.
     // We'll omit it for now. A real implementation would handle file uploads separately.
     const { photo, ...submittableValues } = values;
-    console.log("Submitting values: ", submittableValues);
 
     const result = await submitLostAndFoundReport(submittableValues);
     if (result.success) {

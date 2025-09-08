@@ -15,6 +15,7 @@ const navLinks = [
   { href: "/updates", label: "Updates" },
   { href: "/resources", label: "Resources" },
   { href: "/lost-and-found", label: "Lost & Found" },
+  { href: "/support-chat", label: "AI Chat" },
   { href: "/faq", label: "FAQ" },
   { href: "/volunteer", label: "Volunteer" },
   { href: "/contact", label: "Contact" },
@@ -32,7 +33,7 @@ export function Header() {
             <HeartHandshake className="h-7 w-7 text-primary group-hover:animate-pulse" />
             <span className="font-bold text-xl font-headline">Hope Harbour</span>
           </Link>
-          <nav className="hidden items-center space-x-1 text-sm font-medium md:flex">
+          <nav className="hidden items-center space-x-1 text-sm font-medium lg:flex">
             {navLinks.map(({ href, label }) => (
               <Link
                 key={label}
@@ -44,23 +45,23 @@ export function Header() {
               >
                 {label}
                 {pathname === href && (
-                   <span className="absolute inset-x-2 -bottom-2 h-0.5 bg-primary rounded-full transition-all duration-300"></span>
+                   <span className="absolute inset-x-2 -bottom-4 h-0.5 bg-primary rounded-full transition-all duration-300"></span>
                 )}
-                 <span className="absolute inset-x-2 -bottom-2 h-0.5 bg-primary rounded-full transition-all duration-300 scale-x-0 group-hover:scale-x-100"></span>
+                 <span className="absolute inset-x-2 -bottom-4 h-0.5 bg-primary rounded-full transition-all duration-300 scale-x-0 group-hover:scale-x-100"></span>
               </Link>
             ))}
           </nav>
         </div>
 
         <div className="flex flex-1 items-center justify-end space-x-2">
-          <Button asChild className="hidden md:inline-flex shadow-sm hover:shadow-lg transition-shadow bg-accent hover:bg-accent/90">
+          <Button asChild className="hidden md:inline-flex shadow-lg hover:shadow-xl transition-shadow bg-accent hover:bg-accent/90 rounded-full font-semibold">
             <Link href="/donate">Donate Now</Link>
           </Button>
           <Sheet open={isMobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
               <Button
                 variant="ghost"
-                className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+                className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 lg:hidden"
                 aria-label="Open navigation menu"
               >
                 <Menu className="h-6 w-6" />

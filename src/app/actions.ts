@@ -3,6 +3,7 @@
 
 import { z } from 'zod';
 import { getResourceListingSuggestions, type ResourceListingInput, type ResourceListingOutput } from '@/ai/flows/resource-listing-suggestions';
+import { supportChat, type SupportChatInput, type SupportChatOutput } from '@/ai/flows/support-chat-flow';
 
 const suggestionSchema = z.object({
   listingType: z.enum(['offer', 'request']),
@@ -27,6 +28,22 @@ export async function getSuggestionsAction(
     console.error('Error getting AI suggestions:', error);
     return { error: 'Failed to get suggestions from AI. Please try again.' };
   }
+}
+
+export async function supportChatAction(
+  query: string
+): Promise<SupportChatOutput | { error: string }> {
+    if (!query) {
+        return { error: "Query cannot be empty." };
+    }
+    try {
+        const aiInput: SupportChatInput = { query };
+        const response = await supportChat(aiInput);
+        return response;
+    } catch (error) {
+        console.error("Error in support chat action: ", error);
+        return { error: "Sorry, I couldn't process your request right now."}
+    }
 }
 
 // Placeholder server action for form submissions

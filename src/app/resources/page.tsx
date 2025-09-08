@@ -1,3 +1,4 @@
+
 import {
   Card,
   CardContent,
@@ -84,7 +85,7 @@ export default function ResourcesPage() {
           <p className="mt-6 text-lg leading-8 text-muted-foreground">
             Connect with your community to give and receive help. Share
             resources, find what you need, and support one another.
-          p>
+          </p>
         </div>
 
         <div className="mt-16 grid grid-cols-1 gap-16 lg:grid-cols-2">

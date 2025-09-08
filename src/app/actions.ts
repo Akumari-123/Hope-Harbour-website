@@ -4,6 +4,7 @@
 import { z } from 'zod';
 import { getResourceListingSuggestions, type ResourceListingInput, type ResourceListingOutput } from '@/ai/flows/resource-listing-suggestions';
 import { supportChat, type SupportChatInput, type SupportChatOutput } from '@/ai/flows/support-chat-flow';
+import { textToSpeech, type TextToSpeechInput, type TextToSpeechOutput } from '@/ai/flows/tts-flow';
 
 const suggestionSchema = z.object({
   listingType: z.enum(['offer', 'request']),
@@ -44,6 +45,22 @@ export async function supportChatAction(
         console.error("Error in support chat action: ", error);
         return { error: "Sorry, I couldn't process your request right now."}
     }
+}
+
+export async function textToSpeechAction(
+  text: string
+): Promise<TextToSpeechOutput | { error: string }> {
+  if (!text) {
+    return { error: "Text cannot be empty." };
+  }
+  try {
+    const aiInput: TextToSpeechInput = { text };
+    const response = await textToSpeech(aiInput);
+    return response;
+  } catch (error) {
+    console.error("Error in text-to-speech action: ", error);
+    return { error: "Sorry, I couldn't process your request right now." };
+  }
 }
 
 // Placeholder server action for form submissions

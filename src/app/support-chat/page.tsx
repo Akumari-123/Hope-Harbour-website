@@ -2,48 +2,71 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Send, Bot, User, Loader2, MessageCircle } from "lucide-react";
+import { Send, Bot, User, Loader2, MessageCircle, Mic, MicOff, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { supportChatAction } from "@/app/actions";
+import { supportChatAction, textToSpeechAction } from "@/app/actions";
+import { useToast } from "@/hooks/use-toast";
 
 interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
+  audioDataUri?: string;
 }
 
 export default function SupportChatPage() {
+  const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<any>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
   };
 
+  const playAudio = (audioDataUri: string) => {
+    if (audioRef.current) {
+        audioRef.current.src = audioDataUri;
+        audioRef.current.play().catch(e => console.error("Audio play failed:", e));
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    const query = input.trim();
+    if (!query || isLoading) return;
 
-    const userMessage: Message = { id: `user-${Date.now()}`, role: 'user', content: input };
+    const userMessage: Message = { id: `user-${Date.now()}`, role: 'user', content: query };
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
 
     try {
-      const aiResponse = await supportChatAction(input);
+      const aiResponse = await supportChatAction(query);
+      let assistantMessage: Message;
+
       if ("error" in aiResponse) {
-         const errorMessage: Message = { id: `assistant-${Date.now()}`, role: 'assistant', content: aiResponse.error };
-         setMessages((prev) => [...prev, errorMessage]);
+         assistantMessage = { id: `assistant-${Date.now()}`, role: 'assistant', content: aiResponse.error };
       } else {
-        const assistantMessage: Message = { id: `assistant-${Date.now()}`, role: 'assistant', content: aiResponse.reply };
-        setMessages((prev) => [...prev, assistantMessage]);
+        const ttsResponse = await textToSpeechAction(aiResponse.reply);
+        assistantMessage = { id: `assistant-${Date.now()}`, role: 'assistant', content: aiResponse.reply };
+        if ("audioDataUri" in ttsResponse) {
+            assistantMessage.audioDataUri = ttsResponse.audioDataUri;
+        }
+      }
+
+      setMessages((prev) => [...prev, assistantMessage]);
+      if (assistantMessage.audioDataUri) {
+          playAudio(assistantMessage.audioDataUri);
       }
     } catch (error) {
        const errorMessage: Message = { id: `assistant-${Date.now()}`, role: 'assistant', content: "Sorry, I'm having trouble connecting. Please try again later." };
@@ -52,6 +75,56 @@ export default function SupportChatPage() {
         setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = 'en-US';
+
+      recognitionRef.current.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setInput(transcript);
+        setIsRecording(false);
+      };
+      
+      recognitionRef.current.onerror = (event: any) => {
+        console.error('Speech recognition error:', event.error);
+        toast({
+            variant: "destructive",
+            title: "Voice Error",
+            description: `Could not recognize speech: ${event.error}`
+        });
+        setIsRecording(false);
+      };
+      
+      recognitionRef.current.onend = () => {
+          setIsRecording(false);
+      }
+    }
+  }, [toast]);
+
+  const toggleRecording = () => {
+      if (!recognitionRef.current) {
+          toast({
+              variant: "destructive",
+              title: "Browser not supported",
+              description: "Your browser does not support voice recognition."
+          })
+          return;
+      }
+
+      if (isRecording) {
+          recognitionRef.current.stop();
+          setIsRecording(false);
+      } else {
+          recognitionRef.current.start();
+          setIsRecording(true);
+      }
+  }
+
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -64,6 +137,7 @@ export default function SupportChatPage() {
 
   return (
     <div className="bg-secondary/50">
+      <audio ref={audioRef} className="hidden" />
       <div className="container py-12 md:py-24">
          <div className="mx-auto max-w-4xl text-center">
             <MessageCircle className="mx-auto h-12 w-12 text-primary" />
@@ -101,13 +175,18 @@ export default function SupportChatPage() {
                                 )}
                                 <div
                                 className={cn(
-                                    "max-w-[75%] rounded-2xl p-3 text-sm",
+                                    "max-w-[75%] rounded-2xl p-3 text-sm flex items-center gap-2",
                                     message.role === "user"
                                     ? "bg-primary text-primary-foreground rounded-br-none"
                                     : "bg-muted text-foreground rounded-bl-none"
                                 )}
                                 >
                                 <p>{message.content}</p>
+                                {message.audioDataUri && (
+                                    <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => playAudio(message.audioDataUri!)}>
+                                        <Volume2 className="h-4 w-4" />
+                                    </Button>
+                                )}
                                 </div>
                                  {message.role === "user" && (
                                 <Avatar className="h-8 w-8 border-2 border-muted-foreground/50">
@@ -133,6 +212,9 @@ export default function SupportChatPage() {
                     </ScrollArea>
                     <div className="p-4 border-t">
                         <form onSubmit={handleSubmit} className="flex gap-4 items-center">
+                            <Button type="button" variant="outline" size="icon" onClick={toggleRecording} disabled={isLoading}>
+                                {isRecording ? <MicOff className="text-destructive"/> : <Mic />}
+                            </Button>
                             <Input
                                 value={input}
                                 onChange={handleInputChange}

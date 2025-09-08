@@ -106,7 +106,14 @@ export async function submitResource(data: any) {
 }
 
 export async function submitContactForm(data: any) {
-    console.log("Contact form submitted:", data);
-    // In a real app, you would send an email or save to a database
-    return { success: true, message: "Your message has been sent. We will get back to you shortly." };
+    try {
+        await addDoc(collection(db, "contacts"), {
+            ...data,
+            createdAt: serverTimestamp(),
+        });
+        return { success: true, message: "Your message has been sent. We will get back to you shortly." };
+    } catch (error) {
+        console.error("Error submitting contact form:", error);
+        return { success: false, message: "Could not send your message. Please try again." };
+    }
 }

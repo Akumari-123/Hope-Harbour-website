@@ -101,7 +101,7 @@ export default function VolunteerPage() {
              <div className="mx-auto bg-green-100 dark:bg-green-900/50 p-3 rounded-full mb-4">
               <CheckCircle2 className="h-12 w-12 text-green-600 dark:text-green-400" />
             </div>
-            <CardTitle className="text-3xl">Thank You for Volunteering!</CardTitle>
+            <CardTitle as="h2" className="text-3xl">Thank You for Volunteering!</CardTitle>
             <CardDescription>
               Your willingness to help is inspiring. Our team will review your
               information and be in touch shortly.
@@ -131,9 +131,9 @@ export default function VolunteerPage() {
           </p>
         </div>
 
-        <Card className="max-w-2xl mx-auto mt-12">
+        <Card className="max-w-2xl mx-auto mt-16">
           <CardHeader>
-            <CardTitle>Volunteer Registration</CardTitle>
+            <CardTitle as="h2">Volunteer Registration</CardTitle>
             <CardDescription>
               Please fill out the form below to get started.
             </CardDescription>

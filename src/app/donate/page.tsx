@@ -104,7 +104,7 @@ export default function DonatePage() {
             <div className="mx-auto bg-green-100 dark:bg-green-900/50 p-3 rounded-full mb-4">
               <CheckCircle2 className="h-12 w-12 text-green-600 dark:text-green-400" />
             </div>
-            <CardTitle className="text-3xl">Thank You!</CardTitle>
+            <CardTitle as="h2" className="text-3xl">Thank You!</CardTitle>
             <CardDescription>
               Your generous donation is greatly appreciated. You are making a
               real difference.
@@ -121,7 +121,7 @@ export default function DonatePage() {
   }
 
   return (
-    <div className="bg-secondary">
+    <div className="bg-background">
       <div className="container py-12 md:py-24">
         <div className="mx-auto max-w-4xl text-center">
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl font-headline">
@@ -133,9 +133,9 @@ export default function DonatePage() {
           </p>
         </div>
 
-        <Card className="max-w-2xl mx-auto mt-12">
+        <Card className="max-w-2xl mx-auto mt-16">
           <CardHeader>
-            <CardTitle>Make a Donation</CardTitle>
+            <CardTitle as="h2">Make a Donation</CardTitle>
             <CardDescription>
               Choose an amount and tell us how you'd like to contribute.
             </CardDescription>
@@ -259,7 +259,7 @@ export default function DonatePage() {
                   <div className="flex flex-col sm:flex-row gap-4">
                      <Button
                       type="submit"
-                      className="w-full bg-accent hover:bg-accent/90"
+                      className="w-full"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? (

@@ -13,9 +13,8 @@ import { cn } from "@/lib/utils";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/updates", label: "Updates" },
-  { href: "/donate", label: "Donate" },
-  { href: "/volunteer", label: "Volunteer" },
   { href: "/resources", label: "Resources" },
+  { href: "/volunteer", label: "Volunteer" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -24,26 +23,26 @@ export function Header() {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-20 items-center">
         <div className="mr-4 flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <HeartHandshake className="h-6 w-6 text-primary" />
-            <span className="font-bold font-headline">Hope Harbour</span>
+            <HeartHandshake className="h-7 w-7 text-primary" />
+            <span className="font-bold text-xl font-headline">Hope Harbour</span>
           </Link>
-          <nav className="hidden items-center space-x-1 text-sm font-medium md:flex">
+          <nav className="hidden items-center space-x-2 text-sm font-medium md:flex">
             {navLinks.map(({ href, label }) => (
               <Link
                 key={label}
                 href={href}
                 className={cn(
                   "relative px-3 py-2 transition-colors hover:text-primary",
-                  pathname === href ? "text-primary" : "text-foreground/70"
+                  pathname === href ? "text-primary font-semibold" : "text-foreground/70"
                 )}
               >
                 {label}
                 {pathname === href && (
-                   <span className="absolute inset-x-2 bottom-0 h-0.5 bg-primary"></span>
+                   <span className="absolute inset-x-2 bottom-1.5 h-0.5 bg-primary rounded-full"></span>
                 )}
               </Link>
             ))}
@@ -51,7 +50,7 @@ export function Header() {
         </div>
 
         <div className="flex flex-1 items-center justify-end space-x-2">
-          <Button asChild className="hidden md:inline-flex" variant="default">
+          <Button asChild className="hidden md:inline-flex shadow-sm hover:shadow-md transition-shadow">
             <Link href="/donate">Donate Now</Link>
           </Button>
           <Sheet open={isMobileMenuOpen} onOpenChange={setMobileMenuOpen}>
@@ -91,7 +90,7 @@ export function Header() {
                 </div>
               </div>
               <div className="pl-6">
-                <Button asChild className="w-full" variant="default">
+                <Button asChild className="w-full">
                   <Link href="/donate">Donate Now</Link>
                 </Button>
               </div>

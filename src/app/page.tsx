@@ -75,43 +75,45 @@ const latestUpdates: DisasterUpdate[] = [
 
 function HeroSection() {
   return (
-    <section className="relative bg-background">
-      <div className="container grid lg:grid-cols-2 gap-12 items-center py-20 md:py-32">
-        <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-headline font-bold tracking-tighter mb-6">
-            Hope in Times of Hardship
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-xl mb-8">
-            Your centralized hub for disaster relief. Connect with your
-            community, offer support, or find the help you need, all in one
-            place.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <Button asChild size="lg" className="bg-accent hover:bg-accent/90">
-              <Link href="/donate">
-                <Heart className="mr-2 h-5 w-5" />
-                Donate Now
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="secondary">
-              <Link href="/volunteer">
-                <Users className="mr-2 h-5 w-5" />
-                Become a Volunteer
-              </Link>
-            </Button>
-          </div>
+    <section className="relative bg-background overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-background z-0"></div>
+        <div className="container relative grid lg:grid-cols-2 gap-12 items-center py-20 md:py-32 z-10">
+            <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+            <Badge variant="secondary" className="mb-4 text-primary font-semibold border-primary/20">We Respond. We Rebuild. We Restore Hope.</Badge>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-headline font-bold tracking-tighter mb-6 text-foreground/90">
+                Hope in Times of Hardship
+            </h1>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-xl mb-8">
+                Your centralized hub for disaster relief. Connect with your
+                community, offer support, or find the help you need, all in one
+                place.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                <Button asChild size="lg" className="bg-accent hover:bg-accent/90 shadow-md hover:shadow-lg transition-shadow">
+                <Link href="/donate">
+                    <Heart className="mr-2 h-5 w-5" />
+                    Donate Now
+                </Link>
+                </Button>
+                <Button asChild size="lg" variant="outline" className="bg-background/50 backdrop-blur-sm">
+                <Link href="/volunteer">
+                    <Users className="mr-2 h-5 w-5" />
+                    Become a Volunteer
+                </Link>
+                </Button>
+            </div>
+            </div>
+            <div className="relative w-full h-80 lg:h-full rounded-2xl overflow-hidden shadow-2xl group">
+                <Image
+                    src="https://picsum.photos/800/600"
+                    alt="Volunteers helping in a disaster area"
+                    data-ai-hint="volunteers disaster relief"
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+            </div>
         </div>
-        <div className="relative w-full h-80 lg:h-full rounded-lg overflow-hidden shadow-2xl">
-          <Image
-            src="https://picsum.photos/800/600"
-            alt="Volunteers helping in a disaster area"
-            data-ai-hint="volunteers disaster relief"
-            fill
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
-        </div>
-      </div>
     </section>
   );
 }
@@ -121,29 +123,30 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
   const unitLabel =
     campaign.unit === "dollars"
       ? `$${campaign.current.toLocaleString()}`
-      : `${campaign.current} volunteers`;
+      : campaign.unit === "volunteers" ? `${campaign.current} Volunteers` : `${campaign.current} Items`;
+  
+  const goalLabel = campaign.unit === "dollars"
+  ? `$${campaign.goal.toLocaleString()}`
+  : campaign.goal;
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
       <CardHeader>
         <CardTitle>{campaign.title}</CardTitle>
         <CardDescription>{campaign.description}</CardDescription>
       </CardHeader>
       <CardContent className="flex-grow">
-        <div className="mb-2 flex justify-between text-sm font-medium">
-          <span>{unitLabel}</span>
-          <span>
-            Goal:{" "}
-            {campaign.unit === "dollars"
-              ? `$${campaign.goal.toLocaleString()}`
-              : campaign.goal}
-          </span>
+        <div className="mb-4 space-y-2">
+            <Progress value={progress} aria-label={`${progress.toFixed(0)}% complete`} />
+            <div className="flex justify-between text-sm font-medium text-muted-foreground">
+                <span>{unitLabel} Raised</span>
+                <span>Goal: {goalLabel}</span>
+            </div>
         </div>
-        <Progress value={progress} aria-label={`${progress.toFixed(0)}% complete`} />
       </CardContent>
       <CardFooter>
-        <Button asChild variant="outline" className="w-full">
-          <Link href="/donate">Contribute</Link>
+        <Button asChild variant="outline" className="w-full bg-secondary/50 hover:bg-secondary">
+          <Link href="/donate">Contribute Now</Link>
         </Button>
       </CardFooter>
     </Card>
@@ -152,13 +155,13 @@ function CampaignCard({ campaign }: { campaign: Campaign }) {
 
 function CampaignsSection() {
   return (
-    <section className="bg-secondary py-20">
+    <section className="bg-secondary/50 py-20">
       <div className="container">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-headline font-bold">
             Ongoing Campaigns
           </h2>
-          <p className="text-lg text-muted-foreground mt-2 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground mt-4 max-w-2xl mx-auto">
             Join our efforts to bring relief and support where it's needed most.
           </p>
         </div>
@@ -174,14 +177,14 @@ function CampaignsSection() {
 
 function UpdateCard({ update }: { update: DisasterUpdate }) {
   const severityClasses = {
-    High: "bg-destructive/20 text-destructive-foreground border-destructive",
-    Medium: "bg-yellow-500/20 text-yellow-700 dark:text-yellow-400 border-yellow-500/50",
-    Low: "bg-green-500/20 text-green-700 dark:text-green-400 border-green-500/50",
+    High: "bg-destructive/10 text-destructive border-destructive/20",
+    Medium: "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20",
+    Low: "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20",
   };
   return (
-    <Card>
+    <Card className="transition-shadow duration-300 hover:shadow-lg">
       <CardHeader>
-        <div className="flex justify-between items-start">
+        <div className="flex justify-between items-start gap-2">
           <CardTitle>{update.location}</CardTitle>
           <Badge
             variant="outline"
@@ -190,17 +193,17 @@ function UpdateCard({ update }: { update: DisasterUpdate }) {
             {update.severity} Severity
           </Badge>
         </div>
-        <CardDescription className="flex items-center gap-2">
-          <Megaphone className="h-4 w-4" /> {update.disasterType} -{" "}
+        <CardDescription className="flex items-center gap-2 text-sm">
+          <Megaphone className="h-4 w-4" /> {update.disasterType} &middot;{" "}
           {update.timestamp}
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="mb-4">{update.summary}</p>
-        <div className="flex flex-wrap gap-2">
-          <span className="font-semibold">Needs:</span>
+        <p className="mb-4 text-muted-foreground">{update.summary}</p>
+        <div className="flex flex-wrap gap-2 items-center">
+          <span className="font-semibold text-sm">Urgent Needs:</span>
           {update.urgentNeeds.map((need) => (
-            <Badge key={need} variant="secondary">
+            <Badge key={need} variant="secondary" className="font-normal">
               {need}
             </Badge>
           ))}
@@ -212,13 +215,13 @@ function UpdateCard({ update }: { update: DisasterUpdate }) {
 
 function UpdatesSection() {
   return (
-    <section className="py-20">
+    <section className="py-20 bg-background">
       <div className="container">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-headline font-bold">
             Latest Updates
           </h2>
-          <p className="text-lg text-muted-foreground mt-2 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground mt-4 max-w-2xl mx-auto">
             Stay informed about the latest developments and urgent needs.
           </p>
         </div>
@@ -268,21 +271,21 @@ const helpItems = [
 
 function HowToHelpSection() {
   return (
-    <section className="bg-secondary py-20">
+    <section className="bg-secondary/50 py-20">
       <div className="container">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-headline font-bold">
             How You Can Help
           </h2>
-          <p className="text-lg text-muted-foreground mt-2 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground mt-4 max-w-2xl mx-auto">
             Every act of kindness makes a difference. Find a way to contribute that suits you.
           </p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {helpItems.map((item) => (
-            <Card key={item.title} className="text-center hover:shadow-lg transition-shadow">
+            <Card key={item.title} className="text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
               <CardHeader className="items-center">
-                <div className="bg-primary/10 p-3 rounded-full mb-4">
+                <div className="bg-primary/10 p-4 rounded-xl mb-4">
                   <item.icon className="h-8 w-8 text-primary" />
                 </div>
                 <CardTitle>{item.title}</CardTitle>
@@ -291,7 +294,7 @@ function HowToHelpSection() {
                 <p className="text-muted-foreground">{item.description}</p>
               </CardContent>
               <CardFooter>
-                 <Button asChild variant="ghost" className="w-full text-primary hover:text-primary">
+                 <Button asChild variant="ghost" className="w-full text-primary hover:text-primary font-semibold">
                   <Link href={item.href}>
                     Learn More <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
@@ -307,37 +310,39 @@ function HowToHelpSection() {
 
 function ResourceHubCta() {
   return (
-    <section className="py-20">
+    <section className="py-20 bg-background">
       <div className="container">
-        <Card className="bg-primary text-primary-foreground overflow-hidden">
-          <div className="grid md:grid-cols-2">
-            <div className="p-8 md:p-12">
-              <h2 className="text-3xl font-bold font-headline mb-4">
-                Join the Resource Hub
-              </h2>
-              <p className="mb-6 opacity-80">
-                Whether you have resources to share or are in need of assistance, our community hub is here to connect you.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button asChild variant="secondary">
-                  <Link href="/resources">Offer Help</Link>
-                </Button>
-                <Button asChild variant="outline" className="bg-transparent border-primary-foreground/50 text-primary-foreground hover:bg-primary-foreground/10">
-                  <Link href="/resources">Request Aid</Link>
-                </Button>
-              </div>
+        <div className="relative bg-primary text-primary-foreground rounded-2xl overflow-hidden shadow-xl">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary/80 z-0"></div>
+            <div className="absolute inset-0 opacity-10" style={{backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")'}}></div>
+            <div className="relative z-10 grid md:grid-cols-2 items-center">
+                <div className="p-8 md:p-12">
+                <h2 className="text-3xl font-bold font-headline mb-4">
+                    Join the Resource Hub
+                </h2>
+                <p className="mb-6 opacity-90">
+                    Whether you have resources to share or are in need of assistance, our community hub is here to connect you.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                    <Button asChild variant="secondary" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90">
+                    <Link href="/resources">Offer Help</Link>
+                    </Button>
+                    <Button asChild variant="outline" className="bg-transparent border-primary-foreground/50 text-primary-foreground hover:bg-primary-foreground/10 hover:border-primary-foreground/80">
+                    <Link href="/resources">Request Aid</Link>
+                    </Button>
+                </div>
+                </div>
+                <div className="relative h-64 md:h-full min-h-[250px] hidden md:block">
+                <Image
+                    src="https://picsum.photos/600/400"
+                    alt="Community members sharing resources"
+                    data-ai-hint="community sharing"
+                    fill
+                    className="object-cover"
+                />
+                </div>
             </div>
-            <div className="relative h-64 md:h-auto">
-               <Image
-                src="https://picsum.photos/600/400"
-                alt="Community members sharing resources"
-                data-ai-hint="community sharing"
-                fill
-                className="object-cover"
-              />
-            </div>
-          </div>
-        </Card>
+        </div>
       </div>
     </section>
   );

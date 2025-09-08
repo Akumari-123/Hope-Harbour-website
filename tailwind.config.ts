@@ -17,8 +17,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ['"PT Sans"', 'sans-serif'],
-        headline: ['"PT Sans"', 'sans-serif'],
+        body: ["var(--font-manrope)", 'sans-serif'],
+        headline: ["var(--font-manrope)", 'sans-serif'],
         code: ['monospace'],
       },
       colors: {

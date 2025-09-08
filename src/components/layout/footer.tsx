@@ -3,7 +3,7 @@ import { HeartHandshake, Twitter, Facebook, Instagram } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-secondary text-secondary-foreground">
+    <footer className="bg-secondary/50 border-t">
       <div className="container py-12 md:py-16">
         <div className="flex flex-col items-center gap-8 md:flex-row md:justify-between">
           <div className="flex flex-col items-center md:items-start">
@@ -25,21 +25,21 @@ export function Footer() {
             <div className="flex space-x-4">
               <Link
                 href="#"
-                className="text-muted-foreground hover:text-primary"
+                className="text-muted-foreground hover:text-primary transition-colors"
                 aria-label="Twitter"
               >
                 <Twitter />
               </Link>
               <Link
                 href="#"
-                className="text-muted-foreground hover:text-primary"
+                className="text-muted-foreground hover:text-primary transition-colors"
                 aria-label="Facebook"
               >
                 <Facebook />
               </Link>
               <Link
                 href="#"
-                className="text-muted-foreground hover:text-primary"
+                className="text-muted-foreground hover:text-primary transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram />

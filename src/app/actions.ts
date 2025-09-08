@@ -5,6 +5,9 @@ import { z } from 'zod';
 import { getResourceListingSuggestions, type ResourceListingInput, type ResourceListingOutput } from '@/ai/flows/resource-listing-suggestions';
 import { supportChat, type SupportChatInput, type SupportChatOutput } from '@/ai/flows/support-chat-flow';
 import { textToSpeech, type TextToSpeechInput, type TextToSpeechOutput } from '@/ai/flows/tts-flow';
+import { db } from '@/lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+
 
 const suggestionSchema = z.object({
   listingType: z.enum(['offer', 'request']),
@@ -63,11 +66,18 @@ export async function textToSpeechAction(
   }
 }
 
-// Placeholder server action for form submissions
-export async function submitDonation(data: any) {
-    console.log("Donation submitted:", data);
-    // In a real app, you would process the payment here
-    return { success: true, message: "Thank you for your generous donation!" };
+// Updated server action for form submissions
+export async function submitDonation(data: { amount: number; donationType: string; name: string; email: string; }) {
+    try {
+        await addDoc(collection(db, "donations"), {
+            ...data,
+            createdAt: serverTimestamp(),
+        });
+        return { success: true, message: "Thank you for your generous donation!" };
+    } catch (error) {
+        console.error("Error submitting donation:", error);
+        return { success: false, message: "Could not process your donation. Please try again." };
+    }
 }
 
 export async function submitVolunteerForm(data: any) {

@@ -117,3 +117,16 @@ export async function submitContactForm(data: any) {
         return { success: false, message: "Could not send your message. Please try again." };
     }
 }
+
+export async function submitLostAndFoundReport(data: any) {
+    try {
+        await addDoc(collection(db, "lostAndFoundReports"), {
+            ...data,
+            createdAt: serverTimestamp(),
+        });
+        return { success: true, message: "Thank you for submitting the report. It will be reviewed shortly." };
+    } catch (error) {
+        console.error("Error submitting lost and found report:", error);
+        return { success: false, message: "Could not submit your report. Please try again." };
+    }
+}

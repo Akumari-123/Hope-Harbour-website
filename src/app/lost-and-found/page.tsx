@@ -36,6 +36,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import type { PersonListing } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
+import { submitLostAndFoundReport } from '../actions';
 
 const mockListings: PersonListing[] = [
   {
@@ -160,14 +161,25 @@ function ReportForm() {
 
   async function onSubmit(values: z.infer<typeof reportSchema>) {
     setIsSubmitting(true);
-    console.log(values);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    toast({
-      title: "Report Submitted",
-      description: "Thank you for submitting the report. It will be reviewed shortly.",
-    });
-    form.reset();
+    // The photo field is a FileList, which is not serializable for a server action.
+    // We'll omit it for now. A real implementation would handle file uploads separately.
+    const { photo, ...submittableValues } = values;
+    console.log("Submitting values: ", submittableValues);
+
+    const result = await submitLostAndFoundReport(submittableValues);
+    if (result.success) {
+      toast({
+        title: "Report Submitted",
+        description: result.message,
+      });
+      form.reset();
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Submission Failed",
+        description: result.message,
+      });
+    }
     setIsSubmitting(false);
   }
 

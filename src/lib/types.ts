@@ -26,3 +26,15 @@ export type Resource = {
   userName: string;
   timestamp: string;
 };
+
+export type PersonListing = {
+  id: string;
+  status: 'Missing' | 'Found';
+  name: string;
+  age: number;
+  location: string;
+  imageUrl: string;
+  details: string;
+  contactInfo: string;
+  timestamp: string;
+};

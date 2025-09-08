@@ -14,6 +14,7 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/updates", label: "Updates" },
   { href: "/resources", label: "Resources" },
+  { href: "/lost-and-found", label: "Lost & Found" },
   { href: "/volunteer", label: "Volunteer" },
   { href: "/contact", label: "Contact" },
 ];
@@ -30,7 +31,7 @@ export function Header() {
             <HeartHandshake className="h-7 w-7 text-primary" />
             <span className="font-bold text-xl font-headline">Hope Harbour</span>
           </Link>
-          <nav className="hidden items-center space-x-2 text-sm font-medium md:flex">
+          <nav className="hidden items-center space-x-1 text-sm font-medium md:flex">
             {navLinks.map(({ href, label }) => (
               <Link
                 key={label}
@@ -42,8 +43,9 @@ export function Header() {
               >
                 {label}
                 {pathname === href && (
-                   <span className="absolute inset-x-2 bottom-1.5 h-0.5 bg-primary rounded-full"></span>
+                   <span className="absolute inset-x-2 -bottom-px h-0.5 bg-primary rounded-full transition-all duration-300"></span>
                 )}
+                 <span className="absolute inset-x-2 -bottom-px h-0.5 bg-primary rounded-full transition-all duration-300 scale-x-0 group-hover:scale-x-100"></span>
               </Link>
             ))}
           </nav>

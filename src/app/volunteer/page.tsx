@@ -88,7 +88,7 @@ export default function VolunteerPage() {
       toast({
         variant: "destructive",
         title: "Registration failed",
-        description: "There was an error submitting your form. Please try again.",
+        description: result.message,
       });
     }
   }

@@ -91,7 +91,7 @@ export default function DonatePage() {
       toast({
         variant: "destructive",
         title: "Submission failed",
-        description: "There was an error processing your donation. Please try again.",
+        description: result.message,
       });
     }
   }

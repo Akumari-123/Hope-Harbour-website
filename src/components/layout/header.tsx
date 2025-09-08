@@ -4,10 +4,16 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { Menu, X, HeartHandshake } from "lucide-react";
+import { Menu, HeartHandshake } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -33,28 +39,33 @@ export function Header() {
             <HeartHandshake className="h-7 w-7 text-primary group-hover:animate-pulse" />
             <span className="font-bold text-xl font-headline">Hope Harbour</span>
           </Link>
-          <nav className="hidden items-center space-x-1 text-sm font-medium lg:flex">
+          <nav className="hidden items-center text-sm font-medium lg:flex">
             {navLinks.map(({ href, label }) => (
               <Link
                 key={label}
                 href={href}
                 className={cn(
                   "relative px-3 py-2 transition-colors hover:text-primary group",
-                  pathname === href ? "text-primary font-semibold" : "text-foreground/70"
+                  pathname === href
+                    ? "text-primary font-semibold"
+                    : "text-foreground/70"
                 )}
               >
                 {label}
                 {pathname === href && (
-                   <span className="absolute inset-x-2 -bottom-4 h-0.5 bg-primary rounded-full transition-all duration-300"></span>
+                  <span className="absolute inset-x-2 -bottom-4 h-0.5 bg-primary rounded-full transition-all duration-300"></span>
                 )}
-                 <span className="absolute inset-x-2 -bottom-4 h-0.5 bg-primary rounded-full transition-all duration-300 scale-x-0 group-hover:scale-x-100"></span>
+                <span className="absolute inset-x-2 -bottom-4 h-0.5 bg-primary rounded-full transition-all duration-300 scale-x-0 group-hover:scale-x-100"></span>
               </Link>
             ))}
           </nav>
         </div>
 
         <div className="flex flex-1 items-center justify-end space-x-2">
-          <Button asChild className="hidden md:inline-flex shadow-lg hover:shadow-xl transition-shadow bg-accent hover:bg-accent/90 rounded-full font-semibold">
+          <Button
+            asChild
+            className="hidden md:inline-flex shadow-lg hover:shadow-xl transition-shadow bg-accent hover:bg-accent/90 rounded-full font-semibold"
+          >
             <Link href="/donate">Donate Now</Link>
           </Button>
           <Sheet open={isMobileMenuOpen} onOpenChange={setMobileMenuOpen}>
@@ -68,12 +79,18 @@ export function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="pr-0">
-              <div className="flex items-center justify-between pl-6 mb-4">
-                <Link href="/" className="flex items-center space-x-2">
-                  <HeartHandshake className="h-6 w-6 text-primary" />
-                  <span className="font-bold">Hope Harbour</span>
-                </Link>
-              </div>
+              <SheetHeader className="pl-6 mb-4">
+                <SheetTitle asChild>
+                  <Link
+                    href="/"
+                    className="flex items-center space-x-2"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <HeartHandshake className="h-6 w-6 text-primary" />
+                    <span className="font-bold">Hope Harbour</span>
+                  </Link>
+                </SheetTitle>
+              </SheetHeader>
               <div className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
                 <div className="flex flex-col space-y-4">
                   {navLinks.map(({ href, label }) => (
@@ -94,7 +111,11 @@ export function Header() {
                 </div>
               </div>
               <div className="pl-6">
-                <Button asChild className="w-full">
+                <Button
+                  asChild
+                  className="w-full"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                   <Link href="/donate">Donate Now</Link>
                 </Button>
               </div>

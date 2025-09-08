@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -104,10 +105,11 @@ SheetFooter.displayName = "SheetFooter"
 
 const SheetTitle = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Title>,
-  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Title>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Title> & { asChild?: boolean }
+>(({ className, asChild, ...props }, ref) => (
   <SheetPrimitive.Title
     ref={ref}
+    asChild={asChild}
     className={cn("text-lg font-semibold text-foreground", className)}
     {...props}
   />
@@ -116,10 +118,11 @@ SheetTitle.displayName = SheetPrimitive.Title.displayName
 
 const SheetDescription = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Description>,
-  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Description>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Description> & { asChild?: boolean }
+>(({ className, asChild, ...props }, ref) => (
   <SheetPrimitive.Description
     ref={ref}
+    asChild={asChild}
     className={cn("text-sm text-muted-foreground", className)}
     {...props}
   />

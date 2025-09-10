@@ -2,18 +2,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { collection, getDocs, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { DollarSign, Users, Package, HandHeart } from 'lucide-react';
-import type { Donation, Resource, Volunteer } from '@/lib/types';
+import type { Donation, Resource } from '@/lib/types';
 import { format } from 'date-fns';
 
 const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }: any) => {
+const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -46,7 +46,7 @@ export default function AdminDashboard() {
       setTotalDonations(total);
       setLatestDonations(donationsData.slice(0, 5));
       setIsLoading(false);
-    });
+    }, () => setIsLoading(false));
 
     // Listener for volunteers
     const volunteersQuery = query(collection(db, 'volunteers'));
@@ -176,7 +176,7 @@ export default function AdminDashboard() {
                                       </TableCell>
                                       <TableCell className="text-right">${donation.amount.toLocaleString()}</TableCell>
                                       <TableCell className="text-right text-xs text-muted-foreground">
-                                        {format(new Date(donation.createdAt.seconds * 1000), "PPpp")}
+                                        {donation.createdAt?.seconds ? format(new Date(donation.createdAt.seconds * 1000), "PPpp") : 'Just now'}
                                       </TableCell>
                                   </TableRow>
                               ))}
@@ -218,4 +218,3 @@ export default function AdminDashboard() {
     </div>
   );
 }
-

@@ -38,3 +38,28 @@ export type PersonListing = {
   contactInfo: string;
   timestamp: string;
 };
+
+export type Donation = {
+  id: string;
+  amount: number;
+  donationType: string;
+  name: string;
+  email: string;
+  createdAt: {
+    seconds: number;
+    nanoseconds: number;
+  };
+};
+
+export type Volunteer = {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    skills: string;
+    availability: string[];
+    createdAt: {
+        seconds: number;
+        nanoseconds: number;
+    };
+}

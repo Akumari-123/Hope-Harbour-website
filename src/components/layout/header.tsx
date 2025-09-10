@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { HeartHandshake, Menu } from "lucide-react";
+import { HeartHandshake, Menu, LayoutDashboard } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -62,6 +62,12 @@ export function Header() {
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
+           <Button asChild variant="ghost" size="icon">
+              <Link href="/admin">
+                <LayoutDashboard />
+                <span className="sr-only">Admin Dashboard</span>
+              </Link>
+            </Button>
           <Button
             asChild
             className="shadow-lg hover:shadow-xl transition-shadow bg-accent hover:bg-accent/90 rounded-full font-semibold"
@@ -102,6 +108,19 @@ export function Header() {
                         </Link>
                     </SheetClose>
                   ))}
+                   <SheetClose asChild>
+                       <Link
+                          href="/admin"
+                          className={cn(
+                            "transition-colors hover:text-primary flex items-center",
+                            pathname === "/admin"
+                              ? "text-primary font-semibold"
+                              : "text-muted-foreground"
+                          )}
+                        >
+                          <LayoutDashboard className="mr-2 h-5 w-5"/> Admin
+                        </Link>
+                    </SheetClose>
                 </nav>
                 <div className="mt-auto p-6">
                     <SheetClose asChild>

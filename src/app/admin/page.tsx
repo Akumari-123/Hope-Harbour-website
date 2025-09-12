@@ -170,7 +170,7 @@ export default function AdminDashboard() {
                                   <TableRow key={donation.id}>
                                       <TableCell>{donation.name}</TableCell>
                                       <TableCell>
-                                        <Badge variant={donation.donationType === 'one-time' ? 'secondary' : 'default'} className={donation.donationType === 'recurring' ? 'bg-green-600' : ''}>
+                                        <Badge variant={donation.donationType === 'one-time' ? 'secondary' : 'default'} className={donation.donationType === 'recurring' ? 'bg-primary' : ''}>
                                             {donation.donationType}
                                         </Badge>
                                       </TableCell>

@@ -1,4 +1,8 @@
 
+"use client";
+
+import { useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -70,6 +74,10 @@ const allUpdates: DisasterUpdate[] = [
   },
 ];
 
+const disasterTypes = [...new Set(allUpdates.map(u => u.disasterType))];
+const severities = [...new Set(allUpdates.map(u => u.severity))];
+
+
 function UpdateCard({ update }: { update: DisasterUpdate }) {
   const severityClasses = {
     High: "bg-destructive/20 text-destructive dark:text-destructive-foreground border-destructive/50",
@@ -109,20 +117,31 @@ function UpdateCard({ update }: { update: DisasterUpdate }) {
   );
 }
 
-export default function UpdatesPage({
-  searchParams,
-}: {
-  searchParams: { type?: string; severity?: string };
-}) {
-  const filteredUpdates = allUpdates.filter((update) => {
-    const typeMatch = searchParams.type
-      ? update.disasterType.toLowerCase() === searchParams.type
+export default function UpdatesPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentType = searchParams.get("type");
+  const currentSeverity = searchParams.get("severity");
+
+  const handleFilterChange = (filterType: 'type' | 'severity', value: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (value === 'all') {
+      params.delete(filterType);
+    } else {
+      params.set(filterType, value);
+    }
+    router.push(`/updates?${params.toString()}`);
+  };
+
+  const filteredUpdates = useMemo(() => allUpdates.filter((update) => {
+    const typeMatch = currentType
+      ? update.disasterType.toLowerCase() === currentType
       : true;
-    const severityMatch = searchParams.severity
-      ? update.severity.toLowerCase() === searchParams.severity
+    const severityMatch = currentSeverity
+      ? update.severity.toLowerCase() === currentSeverity
       : true;
     return typeMatch && severityMatch;
-  });
+  }), [currentType, currentSeverity]);
 
   return (
     <div className="bg-secondary/50">
@@ -138,25 +157,26 @@ export default function UpdatesPage({
         </div>
 
         <div className="mt-12 flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
-          <Select>
+          <Select onValueChange={(value) => handleFilterChange('type', value)} defaultValue={currentType || 'all'}>
             <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="Filter by Type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="wildfire">Wildfire</SelectItem>
-              <SelectItem value="flood">Flood</SelectItem>
-              <SelectItem value="earthquake">Earthquake</SelectItem>
-              <SelectItem value="hurricane">Hurricane</SelectItem>
+              <SelectItem value="all">All Types</SelectItem>
+              {disasterTypes.map(type => (
+                <SelectItem key={type} value={type.toLowerCase()}>{type}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
-          <Select>
+          <Select onValueChange={(value) => handleFilterChange('severity', value)} defaultValue={currentSeverity || 'all'}>
             <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="Filter by Severity" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="high">High</SelectItem>
-              <SelectItem value="medium">Medium</SelectItem>
-              <SelectItem value="low">Low</SelectItem>
+                <SelectItem value="all">All Severities</SelectItem>
+                 {severities.map(severity => (
+                <SelectItem key={severity} value={severity.toLowerCase()}>{severity}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

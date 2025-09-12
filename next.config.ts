@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
     unoptimized: true,
     remotePatterns: [
       {
-        protocol: 'httpshttps',
+        protocol: 'https',
         hostname: 'placehold.co',
         port: '',
         pathname: '/**',
